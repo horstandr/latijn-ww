@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Werkwoorden SO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="body" class="body">
+        <div class="left">
+            <label for="ww-kiezer">Kies een werkwoord(lijst) uit het keuzemenu:</label><br>
+            <select name="ww-kiezer" id="ww-kiezer">
+                <option value="random">Willekeurige ww.</option>
+            </select>
+            <div class="table">
+            <label for="select-all">Selecteer alle tijden:</label>
+            <input type="checkbox" name="select-all" id="selectAll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ACT</th>
+                        <th>Ind</th>
+                        <th>Conj</th>
+                        <th></th>
+                        <th>Ind</th>
+                        <th>Conj</th>   
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>prae</td>
+                        <td><input type="checkbox" name="act-ind-pra" id="act-ind-pra"></td>
+                        <td><input type="checkbox" name="act-con-pra" id="act-con-pra"></td>
+                        <td>perf</td>
+                        <td><input type="checkbox" name="act-ind-pft" id="act-ind-pft"></td>
+                        <td><input type="checkbox" name="act-con-pft" id="act-con-pft"></td>
+                    </tr>
+                    <tr>
+                        <td>imp</td>
+                        <td><input type="checkbox" name="act-ind-imp" id="act-ind-imp"></td>
+                        <td><input type="checkbox" name="act-con-imp" id="act-con-imp"></td>
+                        <td>plqpf</td>
+                        <td><input type="checkbox" name="act-ind-plq" id="act-ind-plq"></td>
+                        <td><input type="checkbox" name="act-con-plq" id="act-con-plq"></td>
+                    </tr>
+                    <tr>
+                        <td>fut</td>
+                        <td><input type="checkbox" name="act-ind-fut" id="act-ind-fut"></td>
+                        <td>X</td>
+                        <td>futex</td>
+                        <td><input type="checkbox" name="act-ind-ftx" id="act-ind-ftx"></td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <th>PASS</th>
+                        <th>Ind</th>
+                        <th>Conj</th>
+                        <th></th>
+                        <th>Ind</th>
+                        <th>Conj</th>
+                    </tr>
+                    <tr>
+                        <td>prae</td>
+                        <td><input type="checkbox" name="pas-ind-pra" id="pas-ind-pra"></td>
+                        <td><input type="checkbox" name="pas-con-pra" id="pas-con-pra"></td>
+                        <td>perf</td>
+                        <td><input type="checkbox" name="pas-ind-pft" id="pas-ind-pft"></td>
+                        <td><input type="checkbox" name="pas-con-pft" id="pas-con-pft"></td>
+                    </tr>
+                    <tr>
+                        <td>imp</td>
+                        <td><input type="checkbox" name="pas-ind-imp" id="pas-ind-imp"></td>
+                        <td><input type="checkbox" name="pas-con-imp" id="pas-con-imp"></td>
+                        <td>plqpf</td>
+                        <td><input type="checkbox" name="pas-ind-plq" id="pas-ind-plq"></td>
+                        <td><input type="checkbox" name="pas-con-plq" id="pas-con-plq"></td>
+                    </tr>
+                    <tr>
+                        <td>fut</td>
+                        <td><input type="checkbox" name="pas-ind-fut" id="pas-ind-fut"></td>
+                        <td>X</td>
+                        <td>futex</td>
+                        <td><input type="checkbox" name="pas-ind-ftx" id="pas-ind-ftx"></td>
+                        <td>X</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            <div>
+            <label for="aantal">Hoeveel woorden:</label><br>
+            <input type="number" name="aantal" id="aantal" value="1" min="1" required><br>
+            </div>
+            <button onclick="
+                const checkboxes = document.querySelectorAll('td>input');
+                const checkedValues = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.name);
+                calculate(
+                    document.getElementById('ww-kiezer').value,
+                    ((checkedValues.length<20) ? checkedValues : ['all']),
+                    document.getElementById('aantal').value
+                )">Geef de werkwoorden!</button>
+        </div>
+        <div class="right">
+            <div id="output"></div>
+            <button id="copy" onclick="javascript:copy_text()">Kopieer</button>
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+<!-- Select all script-->
+<script>
+    const selectAll = document.getElementById('selectAll');
+    const cells = document.querySelectorAll('td>input');
+
+    selectAll.addEventListener('change', () => {
+        cells.forEach(cb => cb.checked = selectAll.checked);
+    });
+
+    cells.forEach(cb => {
+        if (cb.disabled) return;
+        cb.addEventListener('change', () => {
+        const allChecked = [...cells].every(c => c.checked);
+        const anyChecked = [...cells].some(c => c.checked);
+        selectAll.checked = allChecked;
+        selectAll.indeterminate = anyChecked && !allChecked;
+        });
+    });
+</script>
+<!-- Ww selectie script -->
+<script>
+  const select = document.getElementById('ww-kiezer');
+
+  ww_lijst.forEach(verb => {
+    const option = document.createElement('option');
+    option.value = verb.inf;
+    option.textContent = verb.inf + ' - ' + verb.rijtje;
+    select.appendChild(option)
+  });
+</script>
+</html>
